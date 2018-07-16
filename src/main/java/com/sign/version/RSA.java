@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
@@ -40,23 +41,7 @@ public class RSA {
         if (rsaPublicKey == null) {
             throw new Exception("加密公钥为空");
         }
-        Cipher cipher = null;
-        try {
-            cipher = Cipher.getInstance("RSA");
-            cipher.init(Cipher.ENCRYPT_MODE, rsaPublicKey);
-            return cipher.doFinal(plainData);
-        } catch (NoSuchAlgorithmException e) {
-            throw new Exception("无此解密算法");
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-            return null;
-        } catch (InvalidKeyException e) {
-            throw new Exception("解密公钥非法,请检查");
-        } catch (IllegalBlockSizeException e) {
-            throw new Exception("密文长度非法");
-        } catch (BadPaddingException e) {
-            throw new Exception("密文数据已损坏");
-        }
+        return encrypt(rsaPublicKey, plainData);
     }
 
     /**
@@ -71,23 +56,7 @@ public class RSA {
         if (rsaPrivateKey == null) {
             throw new Exception("加密私钥为空");
         }
-        Cipher cipher = null;
-        try {
-            cipher = Cipher.getInstance("RSA");
-            cipher.init(Cipher.ENCRYPT_MODE, rsaPrivateKey);
-            return cipher.doFinal(plainData);
-        } catch (NoSuchAlgorithmException e) {
-            throw new Exception("无此解密算法");
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-            return null;
-        } catch (InvalidKeyException e) {
-            throw new Exception("解密公钥非法,请检查");
-        } catch (IllegalBlockSizeException e) {
-            throw new Exception("密文长度非法");
-        } catch (BadPaddingException e) {
-            throw new Exception("密文数据已损坏");
-        }
+        return encrypt(rsaPrivateKey, plainData);
     }
 
     /**
@@ -102,23 +71,7 @@ public class RSA {
         if (rsaPublicKey == null) {
             throw new Exception("解密公钥为空");
         }
-        Cipher cipher = null;
-        try {
-            cipher = Cipher.getInstance("RSA");
-            cipher.init(Cipher.DECRYPT_MODE, rsaPublicKey);
-            return cipher.doFinal(cipherData);
-        } catch (NoSuchAlgorithmException e) {
-            throw new Exception("无此解密算法");
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-            return null;
-        } catch (InvalidKeyException e) {
-            throw new Exception("解密公钥非法,请检查");
-        } catch (IllegalBlockSizeException e) {
-            throw new Exception("密文长度非法");
-        } catch (BadPaddingException e) {
-            throw new Exception("密文数据已损坏");
-        }
+        return decrypt(rsaPublicKey, cipherData);
     }
 
     /**
@@ -133,10 +86,49 @@ public class RSA {
         if (rsaPrivateKey == null) {
             throw new Exception("解密私钥为空");
         }
-        Cipher cipher = null;
+        return decrypt(rsaPrivateKey, cipherData);
+    }
+
+
+    /**
+     * 加密过程
+     *
+     * @param key       钥匙
+     * @param plainData 明文数据
+     * @return
+     * @throws Exception 加密过程中的异常信息
+     */
+    public static byte[] encrypt(Key key, byte[] plainData) throws Exception {
         try {
-            cipher = Cipher.getInstance("RSA");
-            cipher.init(Cipher.DECRYPT_MODE, rsaPrivateKey);
+            Cipher cipher = Cipher.getInstance("RSA");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            return cipher.doFinal(plainData);
+        } catch (NoSuchAlgorithmException e) {
+            throw new Exception("无此加密算法");
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+            return null;
+        } catch (InvalidKeyException e) {
+            throw new Exception("加密公钥非法,请检查");
+        } catch (IllegalBlockSizeException e) {
+            throw new Exception("密文长度非法");
+        } catch (BadPaddingException e) {
+            throw new Exception("密文数据已损坏");
+        }
+    }
+
+    /**
+     * 解密过程
+     *
+     * @param key        私钥
+     * @param cipherData 密文数据
+     * @return 明文
+     * @throws Exception 解密过程中的异常信息
+     */
+    public static byte[] decrypt(Key key, byte[] cipherData) throws Exception {
+        try {
+            Cipher cipher = Cipher.getInstance("RSA");
+            cipher.init(Cipher.DECRYPT_MODE, key);
             return cipher.doFinal(cipherData);
         } catch (NoSuchAlgorithmException e) {
             throw new Exception("无此解密算法");
