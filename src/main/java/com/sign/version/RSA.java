@@ -1,6 +1,7 @@
 package com.sign.version;
 
 import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -23,6 +24,12 @@ import java.security.spec.X509EncodedKeySpec;
  *
  */
 public class RSA {
+
+    /**
+     * RSA算法
+     */
+    public static final String KEY_ALGORTHM = "RSA";
+
     /**
      * 字节数据转字符串专用集合
      */
@@ -93,14 +100,14 @@ public class RSA {
     /**
      * 加密过程
      *
-     * @param key       钥匙
+     * @param key       公钥或私钥
      * @param plainData 明文数据
      * @return
      * @throws Exception 加密过程中的异常信息
      */
     public static byte[] encrypt(Key key, byte[] plainData) throws Exception {
         try {
-            Cipher cipher = Cipher.getInstance("RSA");
+            Cipher cipher = Cipher.getInstance(KEY_ALGORTHM);
             cipher.init(Cipher.ENCRYPT_MODE, key);
             return cipher.doFinal(plainData);
         } catch (NoSuchAlgorithmException e) {
@@ -120,14 +127,14 @@ public class RSA {
     /**
      * 解密过程
      *
-     * @param key        私钥
+     * @param key        公钥或私钥
      * @param cipherData 密文数据
      * @return 明文
      * @throws Exception 解密过程中的异常信息
      */
     public static byte[] decrypt(Key key, byte[] cipherData) throws Exception {
         try {
-            Cipher cipher = Cipher.getInstance("RSA");
+            Cipher cipher = Cipher.getInstance(KEY_ALGORTHM);
             cipher.init(Cipher.DECRYPT_MODE, key);
             return cipher.doFinal(cipherData);
         } catch (NoSuchAlgorithmException e) {
@@ -197,7 +204,7 @@ public class RSA {
     public static RSAPublicKey loadPublicKeyByStr(String publicKeyStr) throws Exception {
         try {
             byte[] buffer = new BASE64Decoder().decodeBuffer(publicKeyStr);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORTHM);
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(buffer);
             return (RSAPublicKey) keyFactory.generatePublic(keySpec);
         } catch (NoSuchAlgorithmException e) {
@@ -239,7 +246,7 @@ public class RSA {
         try {
             byte[] buffer = new BASE64Decoder().decodeBuffer(privateKeyStr);
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(buffer);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORTHM);
             return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
         } catch (NoSuchAlgorithmException e) {
             throw new Exception("无此算法");
@@ -268,7 +275,7 @@ public class RSA {
                 "5RCSaY40";
         String str = "ABC";
         try {
-            /*System.out.println(str);
+            System.out.println(str);
             byte[] epubData = encryptByPub(loadPublicKeyByStr(pubKey), str.getBytes());
             String str1 = new BASE64Encoder().encode(epubData);
             System.out.println(str1);
@@ -280,7 +287,7 @@ public class RSA {
             System.out.println(str3);
             byte[] dpubData = decryptByPub(loadPublicKeyByStr(pubKey), epriData);
             String str4 = new String(dpubData);
-            System.out.println(str4);*/
+            System.out.println(str4);
         } catch (Exception e) {
             e.printStackTrace();
         }

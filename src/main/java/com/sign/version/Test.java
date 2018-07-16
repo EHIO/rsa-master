@@ -1,5 +1,7 @@
 package com.sign.version;
 
+import com.sign.version2.RSAUtils;
+
 /**
  *
  */
@@ -79,12 +81,15 @@ public class Test {
         System.out.println("签名串：" + signstr);
     }
 
-    public static void test4() {
+    public static void test4() throws Exception {
         System.out.println("---------------公钥校验签名------------------");
         String content = "helloworld_这是用于签名的原始数据";
         System.out.println("签名原串：" + content);
         String signstr = RSASignature.sign(content, privateKey, "UTF-8");
+        String signstr2 = RSAUtils.sign(content.getBytes(), privateKey);
+
         System.out.println("签名串：" + signstr);
+        System.out.println("签名串2：" + signstr2);
 
         System.out.println("验签结果：" + RSASignature.doCheck(content, signstr, publicKey, "UTF-8"));
     }

@@ -1,4 +1,4 @@
-package com.sign.version3;
+package com.sign.version2;
 
 import javax.crypto.Cipher;
 import java.io.ByteArrayOutputStream;
@@ -22,7 +22,7 @@ import java.util.Random;
 /**
  * RSA加密
  */
-
+@Deprecated
 public class RSAUtils {
 
     /**
