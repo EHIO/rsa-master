@@ -28,7 +28,7 @@ public class RSASignature {
     public static String sign(String content, String privateKey, String encode) {
         try {
             PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(Base64.decode(privateKey));
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            KeyFactory keyFactory = KeyFactory.getInstance(RSA.KEY_ALGORTHM);
             PrivateKey priKey = keyFactory.generatePrivate(pkcs8EncodedKeySpec);
             Signature signature = Signature.getInstance(SIGN_ALGORITHMS);
             signature.initSign(priKey);
@@ -52,7 +52,7 @@ public class RSASignature {
      */
     public static boolean doCheck(String content, String sign, String publicKey, String encode) {
         try {
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            KeyFactory keyFactory = KeyFactory.getInstance(RSA.KEY_ALGORTHM);
             byte[] encodeKey = Base64.decode(publicKey);
             PublicKey pubKey = keyFactory.generatePublic(new X509EncodedKeySpec(encodeKey));
             Signature signature = Signature.getInstance(SIGN_ALGORITHMS);
